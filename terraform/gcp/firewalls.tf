@@ -1,5 +1,3 @@
-depends_on = ["google_compute_network.basenet"]
-
 resource "google_compute_firewall" "basenet-internal-allow-all" {
   name    = "basenet-internal-allow-all"
   network = "basenet"
