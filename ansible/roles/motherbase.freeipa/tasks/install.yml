@@ -19,10 +19,15 @@
     - ipa-server-dns
     - rng-tools
 
-- replace:
+
+
+#I guess we use this to make sure we set the correct hostname the lasts.
+#We have to set the value is /etc/hosts: https://unix.stackexchange.com/questions/239920/how-to-set-the-fully-qualified-hostname-on-centos-7-0
+
+- name: Ensure that the host name is set correctly
+  lineinfile:
     path: /etc/hosts
-    regexp: '^.*\b({{ ansible_default_ipv4.address }})\b.*$'
-    replace: '{{ ansible_default_ipv4.address }} {{ ansible_hostname }}.{{domain}} {{ ansible_hostname }}'
+    line: ´{{ ansible_default_ipv4.address }} {{ ansible_hostname }}.{{domain}} {{ ansible_hostname }}'
 
 
 #- name: start the firewall service
