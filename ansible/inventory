@@ -1,0 +1,5 @@
+[ctrlmaster]
+192.168.3.2
+
+[ctrlslave]
+192.168.3.3

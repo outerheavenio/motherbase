@@ -1,1 +1,2 @@
-motherbase/terraform/gcp/.terraform
+terraform/gcp/.terraform
+.vagrant

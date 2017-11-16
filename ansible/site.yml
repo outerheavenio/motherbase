@@ -1,0 +1,8 @@
+---
+- hosts: ctrlmaster
+  become: yes
+  vars:
+  roles:
+  tasks:
+    - name: Initial command
+      command: echo "hello world"
