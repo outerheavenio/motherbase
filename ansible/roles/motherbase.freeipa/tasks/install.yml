@@ -24,10 +24,14 @@
 #I guess we use this to make sure we set the correct hostname the lasts.
 #We have to set the value is /etc/hosts: https://unix.stackexchange.com/questions/239920/how-to-set-the-fully-qualified-hostname-on-centos-7-0
 
-- name: Ensure that the host name is set correctly
-  lineinfile:
-    path: /etc/hosts
-    line: ´{{ ansible_default_ipv4.address }} {{ ansible_hostname }}.{{domain}} {{ ansible_hostname }}'
+#- name: Ensure that the host name is set correctly
+#  lineinfile:
+#    path: /etc/hosts
+#    line: ´{{ ansible_default_ipv4.address }} {{ ansible_hostname }}.{{domain}} {{ ansible_hostname }}'
+
+#This is the easist method so far
+- name: Setting hostname via hostnamectl
+  command: hostnamectl set-hostname {{ ansible_hostname }}.{{domain}}
 
 
 #- name: start the firewall service
