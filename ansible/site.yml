@@ -3,6 +3,7 @@
   become: yes
   vars:
   roles:
+    - motherbase.freeipa
   tasks:
     - name: Initial command
       command: echo "hello world"

@@ -1,0 +1,49 @@
+---
+# Stat the named.conf and IPA default.conf file, if the file exists, then IPA is already configured.
+- name: stat IPA configuration
+  stat: path=/etc/ipa/default.conf
+  register: ipa_stat
+
+# FreeIPA Installation
+- name: adding epel repo
+  package: name={{item}} state=installed
+  with_items:
+    - epel-release
+
+- name: adding required freeipa packages
+  package: name={{item}} state=installed
+  with_items:
+    - bind
+    - bind-utils
+    - ipa-server
+    - ipa-server-dns
+    - rng-tools
+
+- replace:
+    path: /etc/hosts
+    regexp: '^.*\b({{ ansible_default_ipv4.address }})\b.*$'
+    replace: '{{ ansible_default_ipv4.address }} {{ ansible_hostname }}.{{domain}} {{ ansible_hostname }}'
+
+
+#- name: start the firewall service
+#  command: service firewalld stop
+
+- name: start the rngd tools
+  command: service rngd start
+
+#I need to make sure that i perform a check before editing file
+#- shell: wc -l /usr/lib/python2.7/site-packages/ipapython/ipautil.py
+#  register: motd_contents
+
+#- name: Generating CSR for services
+#  SHA512withRSA
+
+# ipa-server-install --unattended --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm=SHA512withRSA --no-ui-redirect --realm=lab --ds-password=Kn0wledge2143 --admin-password=Kn0wledge2143 --setup-dns --forwarder=8.8.8.8 --forwarder=8.8.4.4
+#  shell: "/usr/bin/sed -i '202,206d' /usr/lib/python2.7/site-packages/ipapython/ipautil.py"
+
+- name: installing freeipa
+  command: ipa-server-install --unattended --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder=8.8.8.8 --forwarder=8.8.4.4
+  when: ipa_stat.stat.exists == False
+
+# - name: Setting default IPA shell to bash
+#   command: ipa config-mod --defaultshell=/bin/bash

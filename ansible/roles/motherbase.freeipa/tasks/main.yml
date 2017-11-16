@@ -1,0 +1,7 @@
+---
+#I cant remeber why I made this edit. There was a reason, 
+#I believe it was to limit how many times the role is deplyed 
+#based on the number of masters avalible.
+- include: install.yml
+  when: (ansible_hostname == "ctrl-mstr-0") or
+        (ansible_hostname == "ctrlmaster") #for vagrant local testing
