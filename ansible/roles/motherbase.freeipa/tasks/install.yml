@@ -4,11 +4,13 @@
   stat: path=/etc/ipa/default.conf
   register: ipa_stat
 
-# FreeIPA Installation
+
+#We have added the needed repo and download the packages
 - name: adding epel repo
   package: name={{item}} state=installed
   with_items:
     - epel-release
+
 
 - name: adding required freeipa packages
   package: name={{item}} state=installed
@@ -19,40 +21,30 @@
     - ipa-server-dns
     - rng-tools
 
+#This is the easist method so far to set fqdn, it reset after reboot though, FreeIPA needs an FQDN.
+# https://unix.stackexchange.com/questions/239920/how-to-set-the-fully-qualified-hostname-on-centos-7-0
 
-
-#I guess we use this to make sure we set the correct hostname the lasts.
-#We have to set the value is /etc/hosts: https://unix.stackexchange.com/questions/239920/how-to-set-the-fully-qualified-hostname-on-centos-7-0
-
-#- name: Ensure that the host name is set correctly
-#  lineinfile:
-#    path: /etc/hosts
-#    line: ´{{ ansible_default_ipv4.address }} {{ ansible_hostname }}.{{domain}} {{ ansible_hostname }}'
-
-#This is the easist method so far
 - name: Setting hostname via hostnamectl
   command: hostnamectl set-hostname {{ ansible_hostname }}.{{domain}}
 
 
-#- name: start the firewall service
-#  command: service firewalld stop
+#We install rngd because we need to ensure there is enough entropy to
+#generate the initial keys. /dev/random sometimes runs out.
 
-- name: start the rngd tools
-  command: service rngd start
+- service:
+    name: rngd
+    state: started
+    enabled: yes
 
 #I need to make sure that i perform a check before editing file
-#- shell: wc -l /usr/lib/python2.7/site-packages/ipapython/ipautil.py
-#  register: motd_contents
-
-#- name: Generating CSR for services
-#  SHA512withRSA
-
+#/usr/lib/python2.7/site-packages/ipapython/ipautil.py
+# On GCP we need to make sure we delete the IP host checking.
+#
+#This is the purpsoe of the following bit of code. It removes that check.
+#
 # ipa-server-install --unattended --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm=SHA512withRSA --no-ui-redirect --realm=lab --ds-password=Kn0wledge2143 --admin-password=Kn0wledge2143 --setup-dns --forwarder=8.8.8.8 --forwarder=8.8.4.4
 #  shell: "/usr/bin/sed -i '202,206d' /usr/lib/python2.7/site-packages/ipapython/ipautil.py"
 
 - name: installing freeipa
-  command: ipa-server-install --unattended --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder=8.8.8.8 --forwarder=8.8.4.4
+  command: ipa-server-install --unattended --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder={{ IPA_DNS_Forwarder }}
   when: ipa_stat.stat.exists == False
-
-# - name: Setting default IPA shell to bash
-#   command: ipa config-mod --defaultshell=/bin/bash
