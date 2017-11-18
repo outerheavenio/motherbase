@@ -1,3 +1,4 @@
 terraform/gcp/.terraform
 .vagrant
 ansible/site.retry
+terraform/gcp/terraform.tfstate
