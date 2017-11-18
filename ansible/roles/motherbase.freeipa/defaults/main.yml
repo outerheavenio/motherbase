@@ -4,7 +4,7 @@ dsmgr_password: "{{ lookup('env','MGR_PASS') | default('Fr33IPA#DS#MGR',true) }}
 admin_password: "{{ lookup('env','ADMIN_PASS') | default('Fr33IPA#DS#Admin',true) }}"
 ca_signing_algo: "{{ lookup('env','CA_SIGNING_ALGO') | default('SHA512withRSA',true) }}" 
 admin_user: "{{ lookup('env','ADMIN_USER') | default('admin',true) }}"
-
+IPA_DNS_Forwarder: 8.8.8.8
 
 
 #This is where the user variables are generally defined.
