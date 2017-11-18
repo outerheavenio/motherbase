@@ -1,8 +1,5 @@
 ---
 # Stat the named.conf and IPA default.conf file, if the file exists, then IPA is already configured.
-- name: stat IPA configuration
-  stat: path=/etc/ipa/default.conf
-  register: ipa_stat
 
 
 #We have added the needed repo and download the packages
@@ -30,7 +27,6 @@
 
 #We install rngd because we need to ensure there is enough entropy to
 #generate the initial keys. /dev/random sometimes runs out.
-
 - service:
     name: rngd
     state: started
@@ -47,4 +43,3 @@
 
 - name: installing freeipa
   command: ipa-server-install --unattended --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder={{ IPA_DNS_Forwarder }}
-  when: ipa_stat.stat.exists == False

@@ -3,6 +3,15 @@
 #I believe it was to limit how many times the role is deplyed 
 #based on the number of masters avalible.
 
+
+- name: stat IPA configuration
+  stat: path=/etc/ipa/default.conf
+  register: ipa_stat
+
 - include_tasks: install.yml
-  when: (ansible_hostname == "ctrl-mstr-0") or
+  when: 
+      - (ansible_hostname == "ctrl-mstr-0") or
         (ansible_hostname == "ctrlmaster") #for vagrant local testing
+      - ipa_stat.stat.exists == False       
+
+- include_tasks: accounts.yml
