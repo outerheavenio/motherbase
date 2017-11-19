@@ -1,0 +1,38 @@
+---
+domain: "{{ lookup('env','DOMAIN') | default('motherbase.ops',true) }}"
+dsmgr_password: "{{ lookup('env','MGR_PASS') | default('Fr33IPA#DS#MGR',true) }}"
+admin_password: "{{ lookup('env','ADMIN_PASS') | default('Fr33IPA#DS#Admin',true) }}"
+ca_signing_algo: "{{ lookup('env','CA_SIGNING_ALGO') | default('SHA512withRSA',true) }}" 
+admin_user: "{{ lookup('env','ADMIN_USER') | default('admin',true) }}"
+IPA_DNS_Forwarder: 8.8.8.8
+
+
+#This is where the user variables are generally defined.
+#these are the defaults I suppose
+ipa_groups:
+    - name: "offensive"
+      state: "present"
+
+    - name: "defensive"
+      state: "present"
+
+    - name: "support"
+      state: "present"
+
+
+ipa_users:
+   - name: "m3rl1n th31nitiate"
+     username: "m3rl1n"
+     password: "m3rl1npass" 
+     state: "present"
+     surename: "th31nitiate"
+     groups: ['admins']
+     home: "/home/m3rl1n/"
+     ssh_key:
+       - "ssh-rsa AAAAB3NzaDqRoDzNZEfP4mVY156lECghNc2lxR7WXtPb3WOGqntqHetC69tb8JTUmZ8k/DSfBvcztt/7Ua9Q6jFELco/GVYpDgoQ8fnty8bgbEKQM/WEte/cKgi2njUhjaCNvy25wxQhu+l3ukaBEEonNTtxlqug8xvlmmiRoQdJeOM/Vnmnxy6rmsGJ8ZOA7+e3wWROBQV0q7t36c2j m3rl1n@th3-Arch"
+
+
+
+
+
+

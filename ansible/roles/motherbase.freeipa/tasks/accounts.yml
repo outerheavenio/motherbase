@@ -1,0 +1,21 @@
+--- 
+- ipa_user:
+      uid: "{{ item.username }}"
+      givenname: "{{ item.username }}"
+      state: "{{ item.state }}"
+      sn: "{{ item.surename }}"
+      password: "{{ item. password }}"
+      ipa_host: "{{ ansible_hostname }}.{{domain}}"
+      ipa_user: "{{ admin_user }}"
+      ipa_pass: "{{ admin_password }}"
+  with_items: 
+      - "{{ ipa_users }}"
+
+- ipa_group:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    ipa_host: "{{ ansible_hostname }}.{{domain}}"
+    ipa_user: "{{ admin_user }}"
+    ipa_pass: "{{ admin_password }}"
+  with_items:
+    -  "{{ ipa_groups }}"
