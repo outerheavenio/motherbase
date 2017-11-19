@@ -20,29 +20,29 @@ resource "google_compute_instance" "ctrl_master" {
 
 }
 
-//resource "google_compute_instance" "ctrl_slave" {
-//  name  = "ctrl-cli-${count.index}"
-//  count = 2 // might need to put this is a variable since everything will be controlled by that
-//  machine_type = "${var.slave["slave_instance_type_gcp"]}"
-//  zone         = "${var.slave["slave_instance_zone_gcp"]}"
+resource "google_compute_instance" "ctrl_slave" {
+  name  = "ctrl-cli-${count.index}"
+  count = 0 // might need to put this is a variable since everything will be controlled by that
+  machine_type = "${var.slave["slave_instance_type_gcp"]}"
+  zone         = "${var.slave["slave_instance_zone_gcp"]}"
 
-//  depends_on = ["google_compute_instance.ctrl_master"]
+  depends_on = ["google_compute_instance.ctrl_master"]
 
-//  boot_disk {
-//    initialize_params {
-//      image = "${var.slave["slave_os_image"]}"
-//    }
-//  }
+  boot_disk {
+    initialize_params {
+      image = "${var.slave["slave_os_image"]}"
+    }
+  }
 
-//  network_interface {
-//    network = "${google_compute_network.basenet.name}"
+  network_interface {
+    network = "${google_compute_network.basenet.name}"
 
-//    access_config {
- //   }
-//  }
+    access_config {
+    }
+  }
 
-//  scheduling {
-//    preemptible = true
-//    automatic_restart = false
-//  }
-//}
+  scheduling {
+    preemptible = true
+    automatic_restart = false
+  }
+}
