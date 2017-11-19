@@ -45,4 +45,4 @@
 #  shell: "/usr/bin/sed -i '202,206d' /usr/lib/python2.7/site-packages/ipapython/ipautil.py"
 
 - name: installing freeipa
-  command: ipa-server-install --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder={{ IPA_DNS_Forwarder }}
+  command: ipa-server-install --auto-reverse --mkhomedir --unattended --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder={{ IPA_DNS_Forwarder }}
