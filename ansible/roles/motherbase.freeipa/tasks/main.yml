@@ -16,7 +16,7 @@
       # Need to considering removing this to make role more portable, maybe assigning a variable
       #- (ansible_hostname == "ctrl-mstr-0") or
       #  (ansible_hostname == "ctrlmaster") #for vagrant local testing
-      #- ipa_stat.stat.exists == False 
+      - ipa_stat.stat.exists == False 
       - client_provision != True      
 
 - include_tasks: accounts.yml
