@@ -1,4 +1,5 @@
 terraform/gcp/.terraform
 .vagrant
+.kitchen/
 ansible/site.retry
 terraform/gcp/*terraform.tfstate*

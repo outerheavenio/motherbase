@@ -1,0 +1,41 @@
+---
+driver:
+  name: gce
+  project: devlensolutions
+  zone: europe-west1-c
+  tags:
+    - devteam
+    - test-kitchen
+
+provisioner:
+  hosts: ctrlmaster
+  name: ansible_playbook
+  roles_path: roles
+  playbook: site.yml
+  require_chef_for_busser: false
+  require_ruby_for_busser: false
+  ansible_verbosity: 2
+  ansible_verbose: true
+  # starting playbook is at: test/integration/default/default.yml
+
+verifier:
+  name: inspec
+
+transport:
+  username: m3rl1n
+  ssh_key:
+    - ~/.ssh/id_rsa
+
+platforms:
+  - name: centos-7
+    driver:
+      image_project: centos-cloud
+      image_name: centos-7-v20170124
+      metadata:
+        application: centos
+        release: a
+        version: 7
+
+
+suites:
+  - name: default
