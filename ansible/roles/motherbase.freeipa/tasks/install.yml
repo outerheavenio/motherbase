@@ -22,11 +22,30 @@
 # https://unix.stackexchange.com/questions/239920/how-to-set-the-fully-qualified-hostname-on-centos-7-0
 #The replace method is much better this is because IPA takes the FQDN based on hosts file
 
-- name: Replacing the hostname via replace
+- name: Replacing the hostname vagrant via replace
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '127.0.0.1\s*{{ ansible_hostname }}'
+    line: '{{ ansible_eth1.ipv4.address }}  {{ ansible_hostname }}.{{domain}}   {{ ansible_hostname }}'
+    backrefs: yes
+  when:  
+    - ansible_bios_version == "VirtualBox"
+
+
+- name: Replacing the hostname on GCP via replace
   replace:
     path: /etc/hosts
     regexp: '{{ ansible_fqdn }}'
     replace: '{{ ansible_hostname }}.{{domain}}'
+  when:  
+    - ansible_bios_version != "VirtualBox"
+
+#- name: Replacing the hostname via replace
+#  lineinfile:
+#    path: /etc/hosts
+#    insertbefore: BOF
+#    line: '{{ ansible_eth1.ipv4.address }}  {{ ansible_hostname }}.{{domain}}   {{ ansible_hostname }}'
+
 
 #We install rngd because we need to ensure there is enough entropy to
 #generate the initial keys. /dev/random sometimes runs out.
@@ -45,4 +64,4 @@
 #  shell: "/usr/bin/sed -i '202,206d' /usr/lib/python2.7/site-packages/ipapython/ipautil.py"
 
 - name: installing freeipa
-  command: ipa-server-install --auto-reverse --mkhomedir --unattended --ip-address={{ ansible_default_ipv4.address }}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder={{ IPA_DNS_Forwarder }}
+  command: ipa-server-install --auto-reverse --mkhomedir --unattended --ip-address={{ ansible_eth1.ipv4.address}}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder={{ IPA_DNS_Forwarder }}

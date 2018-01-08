@@ -6,6 +6,20 @@ ca_signing_algo: "{{ lookup('env','CA_SIGNING_ALGO') | default('SHA512withRSA',t
 admin_user: "{{ lookup('env','ADMIN_USER') | default('admin',true) }}"
 IPA_DNS_Forwarder: 8.8.8.8
 
+# defaults file for freeipa-client
+
+freeipaclient_enable_ntp: true
+freeipaclient_all_ip_addresses: "{{ true if ansible_distribution_release != 'trusty' else false }}"
+freeipaclient_enable_dns_updates: true
+freeipaclient_force_join: true
+freeipaclient_server: ctrlmaster.motherbase.ops
+freeipaclient_domain: motherbase.ops
+freeipa_dns_server: 192.168.3.2
+freeipaclient_enroll_user: admin
+freeipaclient_enroll_pass: "{{ admin_password }}"
+client_provision: False
+
+
 
 #This is where the user variables are generally defined.
 #these are the defaults I suppose

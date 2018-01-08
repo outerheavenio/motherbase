@@ -8,12 +8,13 @@ Vagrant.configure("2") do |config|
     config.vm.provider :virtualbox do |v|
       v.memory = 2072
       v.cpus = 2
+      
     end
   
     # Define four VMs with static private IP addresses and vagrant needs only letters & numbers.
     boxes = [
-      { :name => "ctrlmaster", :ip => "192.168.3.2", :fqdn => "#{:name}.motherbase"}#,
-      #{ :name => "ctrlslave", :ip => "192.168.3.3", :fqdn => "#{:name}.motherbase"},
+      { :name => "ctrlmaster", :ip => "192.168.3.2", :fqdn => "#{:name}.motherbase"},
+      { :name => "ctrlslave", :ip => "192.168.3.3", :fqdn => "#{:name}.motherbase"},
     ]
   
     # Provision each of the VMs.
