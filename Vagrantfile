@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
     boxes = [
       { :name => "ctrlmaster", :ip => "192.168.3.2", :fqdn => "#{:name}.motherbase"},
       { :name => "ctrlslave", :ip => "192.168.3.3", :fqdn => "#{:name}.motherbase"},
+      { :name => "ctrlslave1", :ip => "192.168.3.4", :fqdn => "#{:name}.motherbase"},
     ]
   
     # Provision each of the VMs.
