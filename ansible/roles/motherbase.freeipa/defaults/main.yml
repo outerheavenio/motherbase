@@ -9,7 +9,7 @@ IPA_DNS_Forwarder: 8.8.8.8
 # defaults file for freeipa-client
 
 freeipaclient_enable_ntp: true
-freeipaclient_all_ip_addresses: False #"{{ true if ansible_distribution_release != 'trusty' else false }}"
+freeipaclient_all_ip_addresses: False #"{{ true if ansible_distribution_varelease != 'trusty' else false }}"
 freeipaclient_enable_dns_updates: False
 freeipaclient_force_join: true
 freeipaclient_server: ctrlmaster.motherbase.ops
