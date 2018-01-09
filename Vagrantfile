@@ -8,7 +8,8 @@ Vagrant.configure("2") do |config|
     config.vm.provider :virtualbox do |v|
       v.memory = 2072
       v.cpus = 2
-      
+      v.customize ['modifyvm', :id, '--natnet1', '192.168.222.0/24']
+
     end
   
     # Define four VMs with static private IP addresses and vagrant needs only letters & numbers.

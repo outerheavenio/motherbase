@@ -26,7 +26,7 @@
   lineinfile:
     dest: /etc/hosts
     regexp: '127.0.0.1\s*{{ ansible_hostname }}'
-    line: '{{ ansible_eth1.ipv4.address }}  {{ ansible_hostname }}.{{domain}}   {{ ansible_hostname }}'
+    line: '{{ main_interface }}  {{ ansible_hostname }}.{{domain}}   {{ ansible_hostname }}'
     backrefs: yes
   when:  
     - ansible_bios_version == "VirtualBox"
@@ -64,4 +64,4 @@
 #  shell: "/usr/bin/sed -i '202,206d' /usr/lib/python2.7/site-packages/ipapython/ipautil.py"
 
 - name: installing freeipa
-  command: ipa-server-install --auto-reverse --mkhomedir --unattended --ip-address={{ ansible_eth1.ipv4.address}}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder={{ IPA_DNS_Forwarder }}
+  command: ipa-server-install --auto-reverse --mkhomedir --unattended --ip-address={{ main_interface }}  --ca-signing-algorithm={{ ca_signing_algo }} --no-ui-redirect --realm={{domain}} --ds-password={{dsmgr_password}} --admin-password={{admin_password}} --setup-dns --forwarder={{ IPA_DNS_Forwarder }}
