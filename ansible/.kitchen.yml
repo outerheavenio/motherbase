@@ -1,22 +1,18 @@
 ---
 driver:
-  name: gce
-  project: devlensolutions
-  zone: europe-west1-c
-  tags:
-    - devteam
-    - test-kitchen
+  name: terraform
+  root_module_directory: /home/m3rl1n/motherbase/terraform/gcp/
+
 
 provisioner:
-  hosts: ctrlmaster
   name: ansible_playbook
   roles_path: roles
+  ansible_inventory: inventory.cloud
   playbook: site.yml
   require_chef_for_busser: false
   require_ruby_for_busser: false
   ansible_verbosity: 2
   ansible_verbose: true
-  # starting playbook is at: test/integration/default/default.yml
 
 verifier:
   name: inspec
@@ -27,15 +23,11 @@ transport:
     - ~/.ssh/id_rsa
 
 platforms:
-  - name: centos-7
-    driver:
-      image_project: centos-cloud
-      image_name: centos-7-v20170124
-      metadata:
-        application: centos
-        release: a
-        version: 7
+  - name: terraform-enviroment
+    driver: terraform
+    provisioner: terraform
+  - name: ctrl_playbooks
 
 
 suites:
-  - name: default
+ - name: env

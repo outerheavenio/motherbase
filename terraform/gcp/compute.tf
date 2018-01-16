@@ -22,7 +22,7 @@ resource "google_compute_instance" "ctrl_master" {
 
 resource "google_compute_instance" "ctrl_slave" {
   name  = "ctrl-cli-${count.index}"
-  count = 0 // might need to put this is a variable since everything will be controlled by that
+  count = 2 // might need to put this is a variable since everything will be controlled by that
   machine_type = "${var.slave["slave_instance_type_gcp"]}"
   zone         = "${var.slave["slave_instance_zone_gcp"]}"
 
