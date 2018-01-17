@@ -53,6 +53,20 @@
     state: present
     name: "{{ item }}"
 
+- name: Replacing the hostname vagrant via replace
+  lineinfile:
+    dest: /etc/hosts
+    insertbefore: BOF
+    line: '{{ main_interface }}  {{ ansible_hostname }}.{{domain}}'
+
+- name: Attempting to fix interface issue /32
+  nmcli:
+    type: ethernet
+    conn_name: default-interface
+    ifname: "{{ 'eth0' if ansible_distribution_release != 'xenial' else 'ens4' }}"
+    ip4: '{{ main_interface }}/20'
+    state: present
+
 - name: Check if host is enrolled
   tags:
     - enroll
