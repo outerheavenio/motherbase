@@ -32,6 +32,8 @@
 - hostname:
     name: "{{ ansible_hostname }}.{{domain}}"
 
+- name: fixing IPA issue on GCP
+  shell: "sed -i '/if not allow_network/,+4d' /usr/lib/python2.7/dist-packages/ipapython/ipautil.py"
 
 - name: Update apt cache
   tags:
@@ -58,14 +60,6 @@
     dest: /etc/hosts
     insertbefore: BOF
     line: '{{ main_interface }}  {{ ansible_hostname }}.{{domain}}'
-
-- name: Attempting to fix interface issue /32
-  nmcli:
-    type: ethernet
-    conn_name: default-interface
-    ifname: "{{ 'eth0' if ansible_distribution_release != 'xenial' else 'ens4' }}"
-    ip4: '{{ main_interface }}/20'
-    state: present
 
 - name: Check if host is enrolled
   tags:
@@ -108,7 +102,6 @@
     {{ '--all-ip-addresses' if freeipaclient_all_ip_addresses else ''}} #This has no purpose to be here atm but will leave it until final refector. 
     {{ '--no-ntp' if not freeipaclient_enable_ntp else ''}}
     {{ '--force-join' if freeipaclient_force_join else ''}}
-
 
 
 - name: Include Ubuntu specific tasks

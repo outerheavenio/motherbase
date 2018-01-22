@@ -1,7 +1,7 @@
 
 variable "project-info" {
   default {
-    project-name = "devlensolutions"
+    project-name = "random-proj"
     project-region = "europe-west1"
   }
 }
