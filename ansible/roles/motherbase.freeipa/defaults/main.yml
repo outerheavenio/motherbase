@@ -39,7 +39,6 @@ ipa_groups:
 ipa_users:
    - name: "m3rl1n th31nitiate"
      username: "m3rl1n"
-     password: "m3rl1npass" 
      state: "present"
      surename: "th31nitiate"
      groups: ['admins']

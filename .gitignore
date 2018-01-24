@@ -3,6 +3,7 @@ terraform/gcp/.terraform
 .kitchen/
 ansible/bin/
 ansible/.terraform
+terraform/gcp/terraform.tf
 ansible/site.retry
 ansible/terraform.tfstate.*
 terraform/.terraform

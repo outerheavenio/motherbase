@@ -42,6 +42,17 @@ resource "google_compute_firewall" "basenet-vpn-rule" {
   target_tags = ["ipsecvpn"]
 }
 
+resource "google_compute_firewall" "basenet-http-allow-all" {
+  name    = "basenet-http-allow-al"
+  network = "${google_compute_network.basenet.name}"
+
+  allow {
+    protocol = "tcp"
+   ports    = ["80","443"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
 
 resource "google_compute_firewall" "basenet-ssh-allow-all" {
   name    = "basenet-ssh-allow-al"
