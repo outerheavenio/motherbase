@@ -4,7 +4,7 @@
       givenname: "{{ item.username }}"
       state: "{{ item.state }}"
       sn: "{{ item.surename }}"
-      password: "{{ item. password }}"
+      password: "{{ item. password }}" #I should look at leaving this part out
       ipa_host: "{{ ansible_hostname }}.{{domain}}"
       ipa_user: "{{ admin_user }}"
       ipa_pass: "{{ admin_password }}"

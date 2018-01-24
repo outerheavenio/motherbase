@@ -32,9 +32,6 @@
 - hostname:
     name: "{{ ansible_hostname }}.{{domain}}"
 
-- name: fixing IPA issue on GCP
-  shell: "sed -i '/if not allow_network/,+4d' /usr/lib/python2.7/dist-packages/ipapython/ipautil.py"
-
 - name: Update apt cache
   tags:
     - packagemanagement
@@ -54,6 +51,12 @@
   package:
     state: present
     name: "{{ item }}"
+
+- name: fixing IPA issue on GCP
+  shell: "sed -i '/if not allow_network/,+4d' /usr/lib/python2.7/dist-packages/ipapython/ipautil.py"
+  when:
+    - ansible_bios_version == "Google"
+    - ansible_os_family == 'Debian'
 
 - name: Replacing the hostname vagrant via replace
   lineinfile:
@@ -99,7 +102,7 @@
     {{ '--enable-dns-updates' if freeipaclient_enable_dns_updates else ''}}
     --unattended
     {{'--ip-address=' + main_interface  if main_interface is defined else ''}}
-    {{ '--all-ip-addresses' if freeipaclient_all_ip_addresses else ''}} #This has no purpose to be here atm but will leave it until final refector. 
+    {{ '--all-ip-addresses' if freeipaclient_all_ip_addresses else ''}} 
     {{ '--no-ntp' if not freeipaclient_enable_ntp else ''}}
     {{ '--force-join' if freeipaclient_force_join else ''}}
 
