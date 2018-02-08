@@ -1,0 +1,19 @@
+[Unit]
+Description=Consul service in docker
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=on-failure
+RestartSec=10s
+Type=notify
+User=root
+Group=root
+NotifyAccess=all
+ExecStart={{ opt_bin }}/systemd-docker run --name=systemd_consul -v {{consul_home}}:{{consul_home}}:ro -d consul agent {% if bootstrap %}-bootstrap{% endif %} {% if consul_is_server %}-server{% endif %} -config-file={{ consul_config_file }}
+ExecStop=/usr/bin/docker stop systemd_consul
+ExecStopPost=/usr/bin/docker rm -f systemd_consul
+ExecReload=/usr/bin/docker restart systemd_consul
+
+[Install]
+WantedBy=multi-user.target

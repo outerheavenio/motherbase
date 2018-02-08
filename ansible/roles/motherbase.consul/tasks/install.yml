@@ -1,0 +1,54 @@
+---
+- name: update apt
+  apt: 
+    update_cache=yes
+    cache_valid_time=3600
+  when: ansible_os_family == "Debian"
+
+- name: install deps (Ubuntu)
+  apt: 
+    pkg={{item}}
+    state=installed
+  with_items:
+    - jq
+    - docker.io
+    - python-docker
+  when: ansible_os_family == "Debian"
+
+- name: install deps (RHEL)
+  yum: 
+    pkg={{item}}
+    state=installed
+  with_items:
+    - docker
+    - docker-python
+  when: ansible_os_family == "RedHat"
+
+- name: creating consul config & data directory
+  file: 
+    state: directory
+    path: "{{ item }}"
+    mode: 0755
+  with_items:
+    - "{{ consul_config_dir }}"
+    - "{{ consul_config_dir }}/certs"
+    - "{{ consul_data_dir }}"
+    - "{{ opt_bin }}"
+
+- name: Ensuring that docker is running and enabled
+  service:
+    state: started
+    enabled: yes
+    name: docker
+
+- name: Pulling consul's docker image
+  docker_image:
+    name: "consul:{{ consul_image_version }}"
+    state: present
+
+- name: consul config file
+  template: 
+    src={{consul_config_template}}
+    dest={{ consul_config_file }}
+    owner=root
+    group=root

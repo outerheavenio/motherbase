@@ -1,0 +1,5 @@
+[mstr-ubuntu]
+192.168.3.2 ansible_connection=ssh ansible_ssh_user=vagrant
+
+[mstr-centos]
+192.168.3.3 ansible_connection=ssh ansible_ssh_user=vagrant
