@@ -4,7 +4,6 @@
       givenname: "{{ item.username }}"
       state: "{{ item.state }}"
       sn: "{{ item.surename }}"
-      password: "{{ item. password }}"
       ipa_host: "{{ ansible_hostname }}.{{domain}}"
       ipa_user: "{{ admin_user }}"
       ipa_pass: "{{ admin_password }}"

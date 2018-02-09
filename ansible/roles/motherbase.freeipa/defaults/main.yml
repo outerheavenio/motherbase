@@ -6,6 +6,22 @@ ca_signing_algo: "{{ lookup('env','CA_SIGNING_ALGO') | default('SHA512withRSA',t
 admin_user: "{{ lookup('env','ADMIN_USER') | default('admin',true) }}"
 IPA_DNS_Forwarder: 8.8.8.8
 
+# defaults file for freeipa-client
+
+
+freeipaclient_hostname: '{{ ansible_hostname }}.{{ domain }}'
+freeipaclient_enable_ntp: false
+freeipaclient_all_ip_addresses: False #"{{ true if ansible_distribution_varelease != 'trusty' else false }}"
+freeipaclient_enable_dns_updates: False
+freeipaclient_force_join: true
+freeipaclient_server: ctrl-mstr-0.motherbase.ops
+freeipaclient_domain: motherbase.ops
+freeipa_dns_server: 10.132.0.2
+freeipaclient_enroll_user: admin
+freeipaclient_enroll_pass: "{{ admin_password }}"
+client_provision: False
+main_interface: "{{ ansible_eth0.ipv4.address if ansible_distribution_release != 'xenial' elif ansible_ens4.ipv4.address }}"
+
 
 #This is where the user variables are generally defined.
 #these are the defaults I suppose
@@ -23,7 +39,6 @@ ipa_groups:
 ipa_users:
    - name: "m3rl1n th31nitiate"
      username: "m3rl1n"
-     password: "m3rl1npass" 
      state: "present"
      surename: "th31nitiate"
      groups: ['admins']

@@ -1,0 +1,35 @@
+---
+driver:
+  name: terraform
+  root_module_directory: /home/m3rl1n/motherbase/terraform/gcp/
+
+
+provisioner:
+  name: ansible_playbook
+  roles_path: roles
+  ansible_inventory: inventory.cloud
+  playbook: site.yml
+  require_chef_for_busser: false
+  require_ruby_for_busser: false
+  ansible_verbosity: 4
+  ansible_verbose: true
+  ansible_connection: ssh
+  ansible_host_key_checking: False
+
+verifier:
+  name: inspec
+
+transport:
+  username: m3rl1n
+  ssh_key:
+    - ~/.ssh/id_rsa
+
+platforms:
+  #- name: terraform-enviroment
+    #driver: terraform
+    #provisioner: terraform
+  - name: ctrl_playbooks
+
+
+suites:
+ - name: env

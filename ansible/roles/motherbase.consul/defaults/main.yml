@@ -1,0 +1,110 @@
+---
+consul_image_version: 1.0.5
+
+consul_ui_server_name: "{{ ansible_fqdn }}"
+consul_ui_require_auth: false
+consul_ui_server_port: 80
+consul_service_state: started
+consul_manage_service: 
+consul_server: True
+consul_is_ui: false
+systemd_docker_url: https://github.com/ibuildthecloud/systemd-docker/releases/download/v0.2.1/systemd-docker
+opt_bin: /opt/bin
+systemd_docker_checksum: sha256:d2991b59eea4bc225a4280c703c14a6885ea814e38f744fa2e1d561cb3c633cc
+
+
+consul_home: /etc/motherbase/consul
+consul_config_dir: "{{ consul_home }}"
+consul_config_file: "{{ consul_home }}/consul.conf"
+# World readable for backward compatibility; set to 0600 if using consul_encrypt_key
+consul_config_file_mode: 0644
+consul_log_file: /var/log/consul
+consul_data_dir: /srv/consul/data
+
+consul_dns_config: false
+consul_dns_allow_stale: false
+consul_dns_max_stale: 5s
+consul_dns_node_ttl: 0s
+consul_dns_service_ttl: 0s
+consul_dns_enable_truncate: false
+consul_dns_only_passing: false
+consul_recursors: []
+
+consul_upstart_template: "consul.conf.j2"
+consul_systemd_template: "consul.systemd.j2"
+consul_kv_template: "consulkv.j2"
+consul_config_template: "consul.json.j2"
+
+consul_reload_config_handler: reload consul config
+consul_restart_handler: restart consul
+
+consul_binary: consul
+
+consul_user: consul
+consul_group: consul
+
+consul_use_systemd: true
+consul_use_upstart: false
+consul_use_initd: false
+
+# Upstart start/stop conditions can vary by distribution and environment
+consul_upstart_start_on: start on runlevel [345]
+consul_upstart_stop_on: stop on runlevel [!345]
+
+consul_is_server: true
+
+bootstrap: true
+
+consul_domain: ops.
+
+consul_servers: ['127.0.0.1']
+consul_log_level: "INFO"
+consul_syslog: false
+consul_rejoin_after_leave: true
+consul_leave_on_terminate: false
+
+consul_join_at_start: false
+consul_retry_join: false
+consul_retry_interval: 30s
+consul_retry_max: 0
+
+consul_servers_wan: []
+consul_join_wan: false
+consul_retry_join_wan: false
+consul_retry_interval_wan: 30s
+consul_retry_max_wan: 0
+consul_advertise_address_wan: false
+
+consul_bind_address: "0.0.0.0"
+consul_dynamic_bind: false
+consul_client_address: "127.0.0.1"
+
+consul_client_address_bind: false
+consul_datacenter: "default"
+consul_disable_remote_exec: false
+
+consul_port_dns: 8600
+consul_port_http: 8500
+consul_port_https: 8544
+consul_port_rpc: 8400
+consul_port_serf_lan: 8301
+consul_port_serf_wan: 8302
+consul_port_server: 8300
+consul_dnsmasq:
+  listen_interface:
+    - lo
+    - docker0
+    - eth0
+  no_dhcp_interface:
+    - lo
+    - docker0
+    - eth0
+  upstream_servers:
+    - 8.8.8.8
+    - 8.8.4.4
+consul_node_name: "{{ inventory_hostname }}"
+consul_verify_server_hostname: false
+consul_cors_support: false
+consul_disable_update_check: false
+consul_services: {}
+consul_services_mode: 0640

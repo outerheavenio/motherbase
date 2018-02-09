@@ -1,0 +1,107 @@
+---
+# tasks file for ansible-freeipa-client
+
+- name: Assert supported distribution
+  tags:
+    - assertion
+    - freeipaclient
+  assert:
+    that:
+      - ansible_distribution + '-' + ansible_distribution_major_version in freeipaclient_supported_distributions
+
+- name: Assert required variables
+  tags:
+    - assertion
+    - freeipaclient
+  assert:
+    that:
+      - freeipaclient_server is defined
+      - freeipaclient_domain is defined
+      - freeipaclient_enroll_user is defined
+      - freeipaclient_enroll_pass is defined
+
+- name: Import variables
+  tags:
+    - import
+    - freeipaclient
+  include_vars: "{{ ansible_distribution }}.yml"
+
+- debug:
+    msg: "After setting DNS service {{ freeipa_dns_server }}"
+
+- hostname:
+    name: "{{ ansible_hostname }}.{{domain}}"
+
+- name: Update apt cache
+  tags:
+    - packagemanagement
+    - freeipaclient
+  become: true
+  when: ansible_pkg_mgr  == 'apt'
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install required packages
+  become: true
+  with_items: "{{ freeipaclient_packages }}"
+  package:
+    state: present
+    name: "{{ item }}"
+
+- name: fixing IPA issue on GCP
+  shell: "sed -i '/if not allow_network/,+4d' /usr/lib/python2.7/dist-packages/ipapython/ipautil.py"
+  when:
+    - ansible_bios_version == "Google"
+    - ansible_os_family == 'Debian'
+
+- name: Replacing the hostname vagrant via replace
+  lineinfile:
+    dest: /etc/hosts
+    insertbefore: BOF
+    line: '{{ main_interface }}  {{ ansible_hostname }}.{{domain}}    {{ ansible_hostname }}'
+
+- name: Check if host is enrolled
+  register: freeipaclient_ipaconf
+  check_mode: no
+  stat:
+    path: /etc/ipa/default.conf
+
+
+- name: Check and see whether DNS has already been configured
+  command: grep -Fxq "nameserver {{ freeipa_dns_server }}" /etc/resolv.conf
+  register: checkIPADNS
+  check_mode: no
+  ignore_errors: True
+  changed_when: False
+
+- name: Replacing the hostname vagrant via replace
+  lineinfile:
+    dest: /etc/resolv.conf
+    insertbefore: BOF
+    line: 'nameserver {{ freeipa_dns_server }}'
+  when: checkIPADNS.rc == 1
+
+
+- name: Enroll host in domain
+  become: true
+  when: not freeipaclient_ipaconf.stat.exists
+  command: >
+    {{ freeipaclient_install_command }}
+    {{'--hostname=' + freeipaclient_hostname  if freeipaclient_hostname is defined else ''}}
+    --server={{ freeipaclient_server }}
+    --domain={{ freeipaclient_domain }}
+    --principal={{ freeipaclient_enroll_user }}
+    --password={{ freeipaclient_enroll_pass }}
+    --mkhomedir
+    {{ '--enable-dns-updates' if freeipaclient_enable_dns_updates else ''}}
+    --unattended
+    {{'--ip-address=' + main_interface  if main_interface is defined else ''}}
+    {{ '--all-ip-addresses' if freeipaclient_all_ip_addresses else ''}} 
+    {{ '--no-ntp' if not freeipaclient_enable_ntp else ''}}
+    {{ '--force-join' if freeipaclient_force_join else ''}}
+
+
+- name: Include Ubuntu specific tasks
+  when: ansible_os_family == 'Debian'
+  include: ubuntu.yml

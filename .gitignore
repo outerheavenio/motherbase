@@ -1,4 +1,11 @@
 terraform/gcp/.terraform
 .vagrant
+.kitchen/
+ansible/bin/
+ansible/.terraform
+terraform/gcp/terraform.tf
 ansible/site.retry
+ansible/terraform.tfstate.*
+terraform/.terraform
 terraform/gcp/*terraform.tfstate*
+ansible/inventory.cloud

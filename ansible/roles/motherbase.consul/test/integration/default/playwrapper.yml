@@ -1,0 +1,17 @@
+---
+- hosts: mstr-ubuntu
+  become: yes
+  vars:
+    domain: "motherbase.ops"
+  roles:
+    - motherbase.consul
+  tasks:
+
+
+- hosts: mstr-centos
+  become: yes
+  vars:
+    domain: "motherbase.ops"
+  roles:
+    - motherbase.consul
+  tasks:

@@ -6,3 +6,10 @@
     - motherbase.freeipa
   tasks:
 
+- hosts: ctrlslave
+  become: yes
+  vars:
+    client_provision: True
+  roles:
+    - motherbase.freeipa
+  tasks:

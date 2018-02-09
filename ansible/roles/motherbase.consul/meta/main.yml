@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: Matthew Finlayson
+  description: Installs and configures consul
+  license: Apache
+  platforms:
+    - name: Ubuntu
+      versions:
+        - precise
+        - trusty
+        - wily
+        - xenial
+    - name: EL
+      versions:
+        - 6
+        - 7
+  galaxy_tags:
+    - system
+    - cloud
+    - clustering
+    - networking
+    - web
+  min_ansible_version: 1.2
+dependencies:
+
