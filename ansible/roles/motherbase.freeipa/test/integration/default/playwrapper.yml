@@ -1,0 +1,21 @@
+---
+- hosts: ipa-leader
+  become: yes
+  vars:
+    main_interface: "{{ ansible_eth1.ipv4.address }}"
+  roles:
+    - motherbase.freeipa
+  tasks:
+
+
+- hosts: ipa-client
+  become: yes
+  vars:
+    freeipaclient_server: ipasrv.motherbase.ops
+    freeipaclient_domain: motherbase.ops
+    freeipa_dns_server: 192.168.3.2
+    main_interface: "{{ ansible_eth1.ipv4.address if ansible_distribution_release != 'xenial' else ansible_enp0s8.ipv4.address }}"
+    client_provision: True
+  roles:
+    - motherbase.freeipa
+  tasks:

@@ -1,0 +1,7 @@
+[ipa-leader]
+192.168.3.2 ansible_connection=ssh ansible_ssh_user=vagrant
+
+
+[ipa-client]
+192.168.3.3 ansible_connection=ssh ansible_ssh_user=vagrant
+192.168.3.4 ansible_connection=ssh ansible_ssh_user=vagrant

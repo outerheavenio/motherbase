@@ -11,42 +11,24 @@ platforms:
       box: box-cutter/ubuntu1604
       network:
         - ["private_network", {ip: "192.168.3.2"}]
+
   - name: centos-7
     driver:
       box: centos/7
       network:
         - ["private_network", {ip: "192.168.3.3"}]
 
-
 suites:
   - name: redhat
     provisioner:
       name: ansible_push
-      raw_arguments: "--limit=mstr-centos --inventory test/integration/default/inventory"
+      raw_arguments: "--inventory test/integration/default/inventory"
       playbook: test/integration/default/playwrapper.yml
       ansible_config: "test/ansible.cfg"
       chef_bootstrap_url: nil
       generate_inv: false
-      private_key: .kitchen/kitchen-vagrant/redhat-centos-7/.vagrant/machines/default/virtualbox/private_key
-      remote_user: vagrant 
+      private_key: ~/.vagrant.d/insecure_private_key
     verifier:
       inspec_tests:
         - test/integration/default/base.rb
-    excludes:
-      - ubuntu-16.04
-
-  - name: debian
-    provisioner:
-      name: ansible_push
-      raw_arguments: "--limit=mstr-ubuntu --inventory test/integration/default/inventory"
-      playbook: test/integration/default/playwrapper.yml
-      ansible_config: "test/ansible.cfg"
-      chef_bootstrap_url: nil
-      generate_inv: false
-      private_key: .kitchen/kitchen-vagrant/debian-ubuntu-1604/.vagrant/machines/default/virtualbox/private_key
-    verifier:
-      inspec_tests:
-        - test/integration/default/base.rb
-    excludes:
-      - centos-7
  

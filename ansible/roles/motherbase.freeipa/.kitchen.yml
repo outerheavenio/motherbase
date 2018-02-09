@@ -1,0 +1,68 @@
+---
+driver:
+  name: vagrant
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: centos-server
+    driver:
+      box: centos/7
+      vm_hostname: ipasrv
+      ssh:
+        insert_key: false
+      network:
+        - ["private_network", {ip: "192.168.3.2"}]
+
+  - name: centos-client
+    driver:
+      box: centos/7
+      ssh:
+        insert_key: false
+      vm_hostname: ipacli-rh
+      network:
+        - ["private_network", {ip: "192.168.3.3"}]
+
+  - name: ubuntu-client
+    driver:
+      box: box-cutter/ubuntu1604
+      ssh:
+        insert_key: false
+      vm_hostname: ipacli-ubun
+      network:
+        - ["private_network", {ip: "192.168.3.4"}]
+
+
+suites:
+  - name: ipaleader
+    provisioner:
+      name: ansible_push
+      raw_arguments: "--limit=ipa-leader --inventory test/inventory"
+      playbook: test/integration/default/playwrapper.yml
+      ansible_config: "test/ansible.cfg"
+      chef_bootstrap_url: nil
+      generate_inv: false
+      private_key: ~/.vagrant.d/insecure_private_key
+    verifier:
+      inspec_tests:
+        - test/integration/default/base.rb
+    excludes:
+      - ubuntu-client
+      - centos-client
+
+
+  - name: ipaclient
+    provisioner:
+      name: ansible_push
+      raw_arguments: "--limit=ipa-client --inventory test/inventory"
+      playbook: test/integration/default/playwrapper.yml
+      ansible_config: "test/ansible.cfg"
+      chef_bootstrap_url: nil
+      generate_inv: false
+      private_key: ~/.vagrant.d/insecure_private_key
+    verifier:
+      inspec_tests:
+        - test/integration/default/base.rb
+    excludes:
+      - centos-server

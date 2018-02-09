@@ -22,7 +22,7 @@
 # https://unix.stackexchange.com/questions/239920/how-to-set-the-fully-qualified-hostname-on-centos-7-0
 #The replace method is much better this is because IPA takes the FQDN based on hosts file
 
-- name: Replacing the hostname vagrant via replace
+- name: Replacing the hostname on vagrant via replace
   lineinfile:
     dest: /etc/hosts
     regexp: '127.0.0.1\s*{{ ansible_hostname }}'
@@ -30,6 +30,13 @@
     backrefs: yes
   when:  
     - ansible_bios_version == "VirtualBox"
+
+
+#- name: Replacing the hostname on vagrant via replace
+#  commad: 'hostnamectl {{ ansible_hostname }}.{{domain}} --static --transient'
+#  when:  
+#    - ansible_bios_version == "VirtualBox"
+#    - ansible_os_family == 'Redhat'
 
 
 - name: Replacing the hostname on GCP via replace

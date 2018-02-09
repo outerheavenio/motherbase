@@ -20,7 +20,7 @@ freeipa_dns_server: 10.132.0.2
 freeipaclient_enroll_user: admin
 freeipaclient_enroll_pass: "{{ admin_password }}"
 client_provision: False
-main_interface: "{{ ansible_eth0.ipv4.address if ansible_distribution_release != 'xenial' else ansible_ens4.ipv4.address }}"
+main_interface: "{{ ansible_eth0.ipv4.address if ansible_distribution_release != 'xenial' elif ansible_ens4.ipv4.address }}"
 
 
 #This is where the user variables are generally defined.
